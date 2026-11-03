@@ -1,0 +1,10 @@
+StudyBrief - AI Research & Study Companion
+Built for the BharatCode Build League hackathon (https://bharatcode.ai/hackathon).
+Tracks: Learning & education / Research & discovery.
+
+Model API usage:
+- All AI calls go to the BharatCode model API: POST https://bharatcode.ai/api/model/v1/chat/completions
+- Auth: Authorization: Bearer $BHARATCODE_API_KEY (developer key from https://bharatcode.ai/account), kept server-side only.
+- Default model: qwen-3.8-27b (configurable with BHARATCODE_MODEL).
+- Output: structured JSON study brief validated with Zod, one repair retry.
+Without a key the app runs a clearly labelled offline demo; no other model provider is used by default.

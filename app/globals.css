@@ -1,0 +1,46 @@
+:root { --bg:#f6f7fb; --card:#fff; --ink:#1d2433; --mute:#667085; --acc:#ff7a1a; --acc2:#138808; --line:#e6e8ef; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+.wrap { max-width:1040px; margin:0 auto; padding:32px 20px 60px; }
+.hero { text-align:center; margin-bottom:22px; }
+.logo { font-size:34px; font-weight:800; background:linear-gradient(90deg,var(--acc),#c2410c 50%,var(--acc2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.tag { color:var(--mute); margin:6px auto 10px; max-width:620px; }
+.pill { display:inline-block; font-size:12px; padding:4px 10px; border-radius:99px; background:#eef2ff; color:#3730a3; font-weight:600; }
+.pill.mock { background:#fff7ed; color:#9a3412; } .pill.openai-test-fallback { background:#fee2e2; color:#991b1b; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px 22px; box-shadow:0 1px 2px rgba(16,24,40,.04); }
+.input textarea { width:100%; border:1px solid var(--line); border-radius:12px; padding:14px; font:inherit; resize:vertical; outline:none; }
+.input textarea:focus { border-color:var(--acc); box-shadow:0 0 0 3px #ff7a1a22; }
+.examples { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:12px; color:var(--mute); font-size:14px; }
+.chip { border:1px solid var(--line); background:#fafafa; border-radius:99px; padding:4px 12px; cursor:pointer; font-size:13px; }
+.chip:hover { border-color:var(--acc); }
+.row { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+.count { font-size:13px; color:var(--mute); } .count.bad { color:#b42318; font-weight:600; }
+button { font:inherit; cursor:pointer; border:1px solid var(--line); background:#fff; border-radius:10px; padding:8px 14px; }
+button.primary { background:var(--acc); color:#fff; border:none; font-weight:700; padding:10px 20px; }
+button:disabled { opacity:.5; cursor:not-allowed; }
+.err { color:#b42318; background:#fef3f2; border-radius:10px; padding:10px 12px; margin:12px 0 0; }
+.toolbar { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; margin:28px 0 4px; }
+.toolbar h1 { margin:0; font-size:26px; }
+.actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.toggle { display:flex; gap:6px; align-items:center; font-weight:600; background:#ecfdf3; color:#067647; padding:7px 12px; border-radius:10px; cursor:pointer; }
+.meta { color:var(--mute); font-size:13px; margin:0 0 16px; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; }
+.wide { grid-column:1/-1; }
+h2 { font-size:17px; margin:0 0 10px; } h2 small { font-weight:400; color:var(--mute); font-size:13px; margin-left:6px; }
+ul { margin:0; padding-left:20px; } li { margin:4px 0; }
+.eli { background:linear-gradient(135deg,#ecfdf3,#fff7ed); }
+.terms { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:10px; margin:0; }
+.terms div { border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
+dt { font-weight:700; color:#c2410c; } dd { margin:2px 0 0; color:#344054; font-size:15px; }
+.quiz { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px; }
+.flip { border:none; padding:0; background:none; perspective:900px; min-height:150px; text-align:left; }
+.flip .inner { position:relative; width:100%; height:100%; min-height:150px; transition:transform .5s; transform-style:preserve-3d; }
+.flip.on .inner { transform:rotateY(180deg); }
+.face { position:absolute; inset:0; border-radius:14px; padding:14px; backface-visibility:hidden; overflow:auto; font-size:15px; }
+.face span { display:block; font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px; opacity:.8; }
+.front { background:#fff7ed; border:1px solid #fed7aa; }
+.back { background:#ecfdf3; border:1px solid #abefc6; transform:rotateY(180deg); }
+.skeleton { min-height:140px; background:linear-gradient(90deg,#eef0f5 25%,#f8f9fc 50%,#eef0f5 75%); background-size:200% 100%; animation:sh 1.2s infinite; }
+@keyframes sh { to { background-position:-200% 0; } }
+footer { text-align:center; color:var(--mute); font-size:13px; margin-top:40px; }
+@media (max-width:720px) { .grid { grid-template-columns:1fr; } }
