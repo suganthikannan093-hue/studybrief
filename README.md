@@ -53,6 +53,21 @@ npm run dev             # http://localhost:3200 (PORT=xxxx to change)
 | `BHARATCODE_BASE_URL` | `https://bharatcode.ai/api/model/v1` | OpenAI-compatible base URL |
 | `BHARATCODE_MODEL` | `qwen-3.8-27b` | `deepseek-v4.1-flash` needs Pro |
 | `STUDYBRIEF_MODE` | – | `mock` forces the offline demo |
+| `STUDYBRIEF_RATE_LIMIT` | `8` | Briefs per IP per window |
+| `STUDYBRIEF_RATE_WINDOW_MS` | `600000` | Rate-limit window (10 min) |
+| `STUDYBRIEF_MAX_CONCURRENT` | `4` | Max in-flight generations per instance |
+
+### Deploying to Vercel
+
+1. Import the GitHub repo at [vercel.com/new](https://vercel.com/new) (framework: Next.js, defaults are fine).
+2. In **Project → Settings → Environment Variables**, add `BHARATCODE_API_KEY` (mark it *Sensitive*) for Production and Preview. Optionally set `BHARATCODE_MODEL`.
+3. Deploy (or redeploy after adding the variable). The header pill shows **BharatCode model API** when the key is picked up.
+
+Or with the CLI: `vercel env add BHARATCODE_API_KEY production` then `vercel --prod`. Never commit `.env`; it is git-ignored.
+
+### Abuse protection
+
+`POST /api/brief` applies an in-memory per-IP limit (first `x-forwarded-for` hop, 8 requests / 10 min) and a global concurrency guard. Over the limit it returns HTTP 429 with a `Retry-After` header and a friendly message shown in the UI. State is per warm serverless instance, so it is best-effort, which is fine for a demo; use a shared store (e.g. Upstash Redis) for strict limits.
 
 ### How the API call works
 
@@ -76,7 +91,7 @@ With no key, StudyBrief returns a deterministic placeholder brief. It is labelle
 npm run lint && npm run typecheck && npm test && npm run build
 ```
 
-Tests (`tests/parse.test.ts`, vitest) cover JSON extraction, schema validation, input limits, the mock, Markdown export and provider selection.
+Tests (`tests/parse.test.ts`, `tests/ratelimit.test.ts`, vitest) cover rate limiting, 429 responses, JSON extraction, schema validation, input limits, the mock, Markdown export and provider selection.
 
 ## Demo flow (≈90 s)
 
