@@ -13,6 +13,11 @@ All AI calls use the **[BharatCode model API](https://bharatcode.ai/build)**. Bu
 
 ![StudyBrief](docs/02-brief.png)
 
+
+## Demo video
+
+▶️ [Watch the demo (docs/demo.mp4)](docs/demo.mp4) — about 1 minute, recorded on the live site https://studybrief-suganthikannan093.vercel.app with a real BharatCode (qwen-3.8-27b) call.
+
 ## Architecture
 
 ```mermaid
