@@ -1,7 +1,8 @@
+import { validateGrounding } from "./learning";
 import { parseBrief } from "./parse";
-import { SYSTEM_PROMPT, repairPrompt, userPrompt } from "./prompt";
+import { SYSTEM_PROMPT, NOTES_PROMPT, repairPrompt, userPrompt } from "./prompt";
 import { mockBrief } from "./mock";
-import { briefJsonSchema, type BriefResponse, type BriefSource } from "./schema";
+import { briefJsonSchema, type BriefResponse, type BriefSource, type StudyMode } from "./schema";
 
 type Msg = { role: "system" | "user" | "assistant"; content: string };
 
@@ -35,13 +36,13 @@ export class LlmError extends Error {
   }
 }
 
-async function chat(p: Provider, messages: Msg[]): Promise<string> {
+async function chat(p: Provider, messages: Msg[], mode: StudyMode): Promise<string> {
   const body: Record<string, unknown> = {
     model: p.model,
     messages,
     max_tokens: 4000,
     temperature: 0.3,
-    response_format: { type: "json_schema", json_schema: { name: "study_brief", schema: briefJsonSchema } },
+    response_format: { type: "json_schema", json_schema: { name: "study_brief", schema: { ...briefJsonSchema, required: mode === "notes" ? [...briefJsonSchema.required, "practice"] : briefJsonSchema.required } } },
   };
   // BharatCode docs: reasoning_effort:"none" avoids spending the output budget on reasoning.
   if (p.source === "bharatcode") body.reasoning_effort = "none";
@@ -70,23 +71,31 @@ async function chat(p: Provider, messages: Msg[]): Promise<string> {
   throw new LlmError("Model is busy (503). Please try again in a few seconds.", 503);
 }
 
-export async function generateBrief(text: string): Promise<BriefResponse> {
+export async function generateBrief(text: string, mode: StudyMode = "topic"): Promise<BriefResponse> {
   const t0 = Date.now();
   const p = resolveProvider();
-  if (!p) return { brief: mockBrief(text), source: "mock", model: "offline-mock", repaired: false, ms: Date.now() - t0 };
+  if (!p) return { brief: mockBrief(text, mode), mode, source: "mock", model: "offline-mock", repaired: false, ms: Date.now() - t0 };
 
   const messages: Msg[] = [
-    { role: "system", content: SYSTEM_PROMPT },
+    { role: "system", content: mode === "notes" ? NOTES_PROMPT : SYSTEM_PROMPT },
     { role: "user", content: userPrompt(text) },
   ];
-  const first = await chat(p, messages);
+  const first = await chat(p, messages, mode);
   let parsed = parseBrief(first);
+  if (parsed.ok && mode === "notes") {
+    const error = validateGrounding(parsed.brief, text);
+    if (error) parsed = { ok: false, error };
+  }
   let repaired = false;
   if (!parsed.ok) {
     repaired = true; // exactly one repair retry
-    const second = await chat(p, [...messages, { role: "assistant", content: first }, { role: "user", content: repairPrompt(parsed.error) }]);
+    const second = await chat(p, [...messages, { role: "assistant", content: first }, { role: "user", content: repairPrompt(parsed.error) }], mode);
     parsed = parseBrief(second);
+    if (parsed.ok && mode === "notes") {
+      const error = validateGrounding(parsed.brief, text);
+      if (error) parsed = { ok: false, error };
+    }
     if (!parsed.ok) throw new LlmError(`The model's reply failed validation twice: ${parsed.error}`);
   }
-  return { brief: parsed.brief, source: p.source, model: p.model, repaired, ms: Date.now() - t0 };
+  return { brief: parsed.brief, mode, source: p.source, model: p.model, repaired, ms: Date.now() - t0 };
 }

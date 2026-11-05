@@ -1,0 +1,102 @@
+[
+  {
+    "seconds": 0.9,
+    "title": "StudyBrief \u00b7 notes to lasting recall",
+    "detail": "A real browser walkthrough: source-linked practice, confidence, evidence and saved reviews."
+  },
+  {
+    "seconds": 5.1,
+    "title": "1 \u00b7 Bring your class notes",
+    "detail": "Notes mode stays tied to your source. The overview is AI-generated; practice quotes are checked against your notes."
+  },
+  {
+    "seconds": 15.0,
+    "title": "2 \u00b7 A personal revision session",
+    "detail": "5 questions generated live with BharatCode. Your notes and progress are saved in this browser."
+  },
+  {
+    "seconds": 19.3,
+    "title": "3 \u00b7 Confidence before feedback",
+    "detail": "For this demonstration, we deliberately choose a wrong answer with high confidence."
+  },
+  {
+    "seconds": 23.4,
+    "title": "4 \u00b7 Reveal the misconception and evidence",
+    "detail": "The exact quote is present in the notes. Quote matching helps inspection; it does not prove the AI\u2019s interpretation."
+  },
+  {
+    "seconds": 32.7,
+    "title": "Answer correctly, but admit uncertainty",
+    "detail": "Confidence changes the next review interval. Every question can be scored only once per round."
+  },
+  {
+    "seconds": 44.7,
+    "title": "5 \u00b7 A transparent round result",
+    "detail": "A practice score and confident-mistake count, without claiming mastery or improved learning."
+  },
+  {
+    "seconds": 50.5,
+    "title": "6 \u00b7 Reload: your progress survives",
+    "detail": "Missed concepts remain visible. Wrong answers return in 10 minutes; correct answers return in 1\u201314 days."
+  },
+  {
+    "seconds": 55.5,
+    "title": "Review due respects the schedule",
+    "detail": "The button is disabled until a question is due. No clock or saved due dates are altered in this recording."
+  },
+  {
+    "seconds": 59.7,
+    "title": "7 \u00b7 Explore a topic",
+    "detail": "General-knowledge briefs remain available. Topic mode does not claim source verification or create a review session."
+  },
+  {
+    "seconds": 67.2,
+    "title": "8 \u00b7 A readable study brief",
+    "detail": "Key points, a simple explanation and important terms, powered by the live BharatCode model."
+  },
+  {
+    "seconds": 75.5,
+    "title": "Explain like I\u2019m 15",
+    "detail": "An everyday analogy helps make an unfamiliar topic more approachable."
+  },
+  {
+    "seconds": 80.1,
+    "title": "9 \u00b7 Flip-card practice",
+    "detail": "Explore the original question-and-answer cards. Saved confidence-based revision is available in notes mode."
+  },
+  {
+    "seconds": 84.9,
+    "title": "10 \u00b7 Copy or download your brief",
+    "detail": "Markdown export includes key points, terms, questions, ELI15 and source-linked practice when available."
+  },
+  {
+    "seconds": 89.5,
+    "title": "11 \u00b7 Delete saved notes and progress",
+    "detail": "Remove a session from browser storage. There is no account or cross-device sync."
+  },
+  {
+    "seconds": 94.1,
+    "title": "Input limits with clear feedback",
+    "detail": "Long inputs are rejected before generation. Notes mode also requires enough material to create questions."
+  },
+  {
+    "seconds": 97.8,
+    "title": "StudyBrief \u00b7 attempt \u2192 inspect \u2192 revisit",
+    "detail": "Open source \u00b7 BharatCode Build League \u00b7 source-linked practice and a personal review loop."
+  },
+  {
+    "seconds": 102.1,
+    "title": "12 \u00b7 Clearly labelled offline mode",
+    "detail": "A separate server has no live generation enabled. Offline samples demonstrate mechanics, not model quality."
+  },
+  {
+    "seconds": 107.6,
+    "title": "Offline samples stay visibly labelled",
+    "detail": "Students can try the workflow without a key. Real assessments require live BharatCode generation."
+  },
+  {
+    "seconds": 112.3,
+    "title": "StudyBrief \u00b7 attempt \u2192 inspect \u2192 revisit",
+    "detail": "Open source \u00b7 BharatCode Build League \u00b7 source-linked practice and a personal review loop."
+  }
+]

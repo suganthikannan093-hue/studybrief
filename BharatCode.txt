@@ -1,4 +1,4 @@
-StudyBrief - AI Research & Study Companion
+StudyBrief - notes to lasting recall
 Built for the BharatCode Build League hackathon (https://bharatcode.ai/hackathon).
 Tracks: Learning & education / Research & discovery.
 
@@ -8,3 +8,5 @@ Model API usage:
 - Default model: qwen-3.8-27b (configurable with BHARATCODE_MODEL).
 - Output: structured JSON study brief validated with Zod, one repair retry.
 Without a key the app runs a clearly labelled offline demo; no other model provider is used by default.
+
+Differentiating workflow: source-linked multiple-choice practice, confidence checks, confident-mistake tracking and a persistent browser-local review queue. Exact source quotes are validated server-side with one repair retry; quote matching does not guarantee semantic correctness.

@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     );
   }
   try {
-    return NextResponse.json(await generateBrief(parsed.data.text));
+    return NextResponse.json(await generateBrief(parsed.data.text, parsed.data.mode));
   } catch (e) {
     const status = e instanceof LlmError ? e.status : 500;
     console.error("[studybrief]", e);

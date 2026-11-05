@@ -44,3 +44,34 @@ dt { font-weight:700; color:#c2410c; } dd { margin:2px 0 0; color:#344054; font-
 @keyframes sh { to { background-position:-200% 0; } }
 footer { text-align:center; color:var(--mute); font-size:13px; margin-top:40px; }
 @media (max-width:720px) { .grid { grid-template-columns:1fr; } }
+.mode-switch { display:flex; gap:8px; flex-wrap:wrap; }
+.mode-switch [aria-pressed="true"] { background:#163b35; color:white; border-color:#163b35; }
+.muted { color:var(--mute); font-size:14px; }
+.revision { margin:32px 0; }
+.section-heading { display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+.section-heading h2 { font-size:23px; margin:0; }
+.eyebrow { color:#116b59; text-transform:uppercase; letter-spacing:.09em; font-size:11px; font-weight:800; margin:0 0 6px; }
+.library { display:grid; gap:10px; }
+.library-item { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+h3 { margin:0 0 10px; font-size:18px; }
+.library-item h3 { font-size:16px; }
+.selected-session { border-color:#138808; }
+.empty-state { padding:26px; border:1px dashed #b4c9c0; border-radius:16px; color:var(--mute); }
+.practice-panel { margin-top:20px; border-top:4px solid #116b59; }
+.choice-list { display:grid; gap:10px; border:0; padding:0; margin:16px 0; }
+.answer-choice { display:flex; align-items:flex-start; gap:12px; border:1px solid var(--line); padding:14px; border-radius:10px; cursor:pointer; }
+.answer-choice input { margin-top:6px; flex-shrink:0; }
+.answer-choice.chosen { border-color:#c2410c; background:#fff7ed; }
+.answer-choice.correct-choice { border-color:#067647; background:#ecfdf3; }
+.confidence { border:0; padding:0; margin:18px 0; display:flex; gap:18px; flex-wrap:wrap; }
+.confidence legend { margin-bottom:8px; font-weight:600; }
+.confidence label { display:flex; gap:6px; align-items:center; }
+.feedback { background:#f4faf6; padding:20px; border-radius:12px; }
+.feedback blockquote { border-left:3px solid #116b59; margin:12px 0; padding:8px 14px; background:white; white-space:pre-wrap; }
+summary { cursor:pointer; font-weight:600; }
+.source-notes { white-space:pre-wrap; max-height:260px; overflow:auto; font-size:14px; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+button:focus-visible, input:focus-visible, summary:focus-visible { outline:3px solid #116b59; outline-offset:3px; }
+@media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
+
+.gap-summary { color:#9a3412; font-size:13px; margin:6px 0; }

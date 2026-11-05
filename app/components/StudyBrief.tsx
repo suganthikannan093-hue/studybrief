@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { MAX_INPUT_CHARS, type BriefResponse } from "@/lib/schema";
+import RevisionLab from "./RevisionLab";
+import { MAX_INPUT_CHARS, type BriefResponse, type StudyMode } from "@/lib/schema";
 import { briefToMarkdown, slugify } from "@/lib/markdown";
 
 const EXAMPLES = [
@@ -20,6 +21,8 @@ const SOURCE_LABEL: Record<string, string> = {
 };
 
 export default function StudyBrief() {
+  const [studyMode, setStudyMode] = useState<StudyMode>("notes");
+  const [revisionInput, setRevisionInput] = useState<{ response: BriefResponse; notes: string } | null>(null);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +40,8 @@ export default function StudyBrief() {
 
   async function generate() {
     if (!text.trim() || tooLong) return;
+    const submittedText = text;
+    const submittedMode = studyMode;
     setLoading(true);
     setError(null);
     setFlipped({});
@@ -44,11 +49,12 @@ export default function StudyBrief() {
       const res = await fetch("/api/brief", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text: submittedText, mode: submittedMode }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || `Request failed (${res.status})`);
       setData(json);
+      if (submittedMode === "notes") setRevisionInput({ response: json, notes: submittedText });
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -76,7 +82,7 @@ export default function StudyBrief() {
     <main className="wrap">
       <header className="hero">
         <div className="logo">📘 StudyBrief</div>
-        <p className="tag">Paste a topic, article or notes. Get key points, a simple explanation, terms, a practice quiz and an ELI15 version.</p>
+        <p className="tag">Turn your notes into source-linked practice. Find confident mistakes, check the evidence, and return when it’s time to review.</p>
         {mode && (
           <span className={`pill ${mode.source}`} data-testid="mode-pill">
             {SOURCE_LABEL[mode.source]} · {mode.model}
@@ -85,10 +91,15 @@ export default function StudyBrief() {
       </header>
 
       <section className="card input">
+        <div className="mode-switch" role="group" aria-label="Study mode">
+          <button aria-pressed={studyMode === "notes"} onClick={() => setStudyMode("notes")}>Revise my notes</button>
+          <button aria-pressed={studyMode === "topic"} onClick={() => setStudyMode("topic")}>Explore a topic</button>
+        </div>
+        <p className="muted">{studyMode === "notes" ? "Paste at least 80 characters of notes. Practice questions include quotes from your source; overview explanations are AI-generated." : "Get an introductory brief from the model’s general knowledge. Topic mode has no source verification or saved review queue."}</p>
         <div className="examples">
           <span>Try:</span>
           {EXAMPLES.map((ex) => (
-            <button key={ex.label} className="chip" onClick={() => setText(ex.text)}>{ex.label}</button>
+            <button key={ex.label} className="chip" onClick={() => { setText(ex.text); setStudyMode(ex.label.startsWith("Notes:") ? "notes" : "topic"); }}>{ex.label}</button>
           ))}
         </div>
         <textarea
@@ -101,13 +112,15 @@ export default function StudyBrief() {
         />
         <div className="row">
           <span className={`count ${tooLong ? "bad" : ""}`}>{text.length.toLocaleString()} / {MAX_INPUT_CHARS.toLocaleString()}</span>
-          <button className="primary" onClick={generate} disabled={loading || !text.trim() || tooLong}>
-            {loading ? "Generating…" : "Generate study brief"}
+          <button className="primary" onClick={generate} disabled={loading || text.trim().length < (studyMode === "notes" ? 80 : 3) || tooLong}>
+            {loading ? "Building your session…" : studyMode === "notes" ? "Build revision session" : "Generate study brief"}
           </button>
         </div>
         {tooLong && <p className="err">Input is too long. Trim it to {MAX_INPUT_CHARS.toLocaleString()} characters.</p>}
         {error && <p className="err" role="alert">⚠️ {error}</p>}
       </section>
+
+      <RevisionLab incoming={revisionInput} />
 
       {loading && (
         <section className="grid">

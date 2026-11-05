@@ -3,3 +3,6 @@ node_modules
 .env
 .env.local
 *.tsbuildinfo
+
+# Raw screen recordings and intermediate captures
+docs/.recordings/

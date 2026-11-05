@@ -1,7 +1,7 @@
-import type { Brief } from "./schema";
+import type { Brief, StudyMode } from "./schema";
 
 /** Deterministic offline brief so the app is demoable without a key. Clearly labelled in the UI. */
-export function mockBrief(text: string): Brief {
+export function mockBrief(text: string, mode: StudyMode = "topic"): Brief {
   const clean = text.replace(/\s+/g, " ").trim();
   const first = clean.split(/[.!?\n]/)[0];
   const topic = (first.length > 48 ? first.slice(0, 48).replace(/\s+\S*$/, "") + "…" : first) || "Your topic";
@@ -13,7 +13,17 @@ export function mockBrief(text: string): Brief {
     term: w,
     definition: `[Offline demo] A model-written definition of "${w}" appears here with a BharatCode key.`,
   }));
+  const practice = mode === "notes" ? [0, 1, 2].map((index) => {
+    // Offline mode only demonstrates mechanics; it does not pretend to generate a real assessment.
+    const quote = clean.slice(0, 180);
+    const answer = quote || "No source text";
+    const choices = ["This is not stated in the notes.", "The notes provide no information.", "This is an unrelated claim."];
+    choices.splice(index, 0, answer);
+    return { concept: `Demo source recall ${index + 1}`, question: `[Offline demo] Which passage appears in your notes? (Sample ${index + 1})`, choices, correctIndex: index,
+      explanation: "Offline sample only. Connect BharatCode for meaningful questions and explanations.", sourceQuote: quote };
+  }) : undefined;
   return {
+    ...(practice ? { practice } : {}),
     title: `${topic} (offline demo)`,
     keyPoints: pts,
     simpleExplanation: `[Offline demo] This is placeholder text. Add BHARATCODE_API_KEY to .env to get a real explanation of "${topic}" from the BharatCode model API.`,
