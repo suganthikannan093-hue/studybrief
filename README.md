@@ -13,7 +13,7 @@ A revision companion for students who can recognize an answer but cannot yet rec
 
 **Explore a topic** preserves the original summary, terms, flashcards, ELI15 and Markdown export flow. It uses general model knowledge, has no checked source, and does not create a review session.
 
-All AI calls use the **[BharatCode model API](https://bharatcode.ai/build)**. Built for the [BharatCode Build League](https://bharatcode.ai/hackathon).
+Live generation uses the **[BharatCode model API](https://bharatcode.ai/build)** by default; a separately labelled development-only fallback is described below. Built for the [BharatCode Build League](https://bharatcode.ai/hackathon).
 
 ![StudyBrief](docs/02-brief.png)
 
@@ -24,15 +24,22 @@ All AI calls use the **[BharatCode model API](https://bharatcode.ai/build)**. Bu
 
 ## Architecture
 
+For source validation, review scheduling and browser persistence, see the [architecture guide](docs/ARCHITECTURE.md).
+
 ```mermaid
 flowchart LR
-  U[Browser: StudyBrief UI<br/>app/components/StudyBrief.tsx] -- POST /api/brief {text} --> R[Next.js route<br/>app/api/brief/route.ts]
+  U[Browser: StudyBrief UI<br/>app/components/StudyBrief.tsx] -- POST text and mode --> R[Next.js route<br/>app/api/brief/route.ts]
   R -- Zod input limits --> G[generateBrief<br/>lib/llm.ts]
   G -- no key --> M[Offline demo<br/>lib/mock.ts]
   G -- Bearer BHARATCODE_API_KEY --> B[(BharatCode model API<br/>/api/model/v1/chat/completions<br/>qwen-3.8-27b)]
   B -- JSON text --> P[parseBrief<br/>lib/parse.ts + Zod schema]
   P -- invalid --> RP[1 repair retry] --> B
-  P -- valid Brief --> R --> U
+  P -- notes mode --> Q[Source-quote membership check]
+  Q -- invalid --> RP
+  Q -- valid --> R
+  P -- topic mode --> R --> U
+  U --> L[RevisionLab: confidence and review queue]
+  L <--> S[(Browser localStorage)]
 ```
 
 - **Next.js 15 App Router + TypeScript**, no UI framework, one CSS file.
@@ -42,10 +49,10 @@ flowchart LR
 
 ## Setup
 
-Requires Node 20+.
+The full app/test toolchain is validated with **Node 26.13.0**; use Node 26+ for the locked dependencies. See [runtime requirements](docs/OPERATIONS.md#runtime-and-installation).
 
 ```bash
-npm install
+npm ci
 cp .env.example .env    # then add your key
 npm run dev             # http://localhost:3200 (PORT=xxxx to change)
 ```
@@ -53,14 +60,14 @@ npm run dev             # http://localhost:3200 (PORT=xxxx to change)
 ### Getting a BharatCode API key
 
 1. Sign in at [bharatcode.ai](https://bharatcode.ai/login).
-2. Create a developer API key at [bharatcode.ai/account](https://bharatcode.ai/account). API access needs Lite, Pro or verified student access (students get 10M tokens a day on `qwen-3.8-27b`).
+2. Create a developer API key at [bharatcode.ai/account](https://bharatcode.ai/account). Check your BharatCode account for current API access and usage entitlements.
 3. Put it in `.env` as `BHARATCODE_API_KEY=...`.
 
 | Variable | Default | Purpose |
 |---|---|---|
 | `BHARATCODE_API_KEY` | _(empty → offline demo)_ | Bearer token for the model API |
 | `BHARATCODE_BASE_URL` | `https://bharatcode.ai/api/model/v1` | OpenAI-compatible base URL |
-| `BHARATCODE_MODEL` | `qwen-3.8-27b` | `deepseek-v4.1-flash` needs Pro |
+| `BHARATCODE_MODEL` | `qwen-3.8-27b` | Model ID available to your provider account |
 | `STUDYBRIEF_MODE` | – | `mock` forces the offline demo |
 | `STUDYBRIEF_RATE_LIMIT` | `8` | Briefs per IP per window |
 | `STUDYBRIEF_RATE_WINDOW_MS` | `600000` | Rate-limit window (10 min) |
@@ -132,6 +139,16 @@ lib/markdown.ts Markdown export (including source-linked practice)
 tests/          vitest       docs/         screenshots
 BharatCode.txt  required by the Build League
 ```
+
+## Documentation
+
+- [Feature guide](docs/FEATURES.md) — complete student workflow and scheduling rules.
+- [Architecture](docs/ARCHITECTURE.md) and [HTTP API](docs/API.md) — components, contracts and data flow.
+- [Operations](docs/OPERATIONS.md) — setup, environment variables, deployment and troubleshooting.
+- [Testing](docs/TESTING.md) — automated checks, browser coverage and evaluation gaps.
+- [Demo and recording](docs/DEMO.md), [competition plan](docs/WINNING-STRATEGY.md), and [changelog](CHANGELOG.md).
+
+See the [documentation index](docs/README.md) for all guides. Legacy PNG screenshots show the earlier interface; the MP4 is the updated full feature walkthrough.
 
 ## License
 
